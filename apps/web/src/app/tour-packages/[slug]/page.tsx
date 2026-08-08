@@ -8,17 +8,26 @@ import { packages } from "@/data/site";
 
 export function generateStaticParams() {
   return packages.map((travelPackage) => ({ slug: travelPackage.slug }));
-}
+} 
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const travelPackage = packages.find((item) => item.slug === params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const travelPackage = packages.find((item) => item.slug === slug);
+
   if (!travelPackage) {
-    return { title: "Package Not Found | Traveller" };
+    return {
+      title: "Package Not Found | Traveller",
+    };
   }
 
   return {
     title: `${travelPackage.title} | Traveller`,
-    description: travelPackage.overview
+    description: travelPackage.overview,
   };
 }
 
